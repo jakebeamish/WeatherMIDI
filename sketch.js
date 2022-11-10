@@ -77,7 +77,9 @@ function draw() {
   for (let i = 0; i <= temps.length; i++) {
     let x = i * (width / temps.length)
     strokeWeight(3)
-    point(x, height / 3 - temps[i]);
+    let y = height / 3;
+
+    point(x, y - temps[i]);
 
   }
 
@@ -103,7 +105,7 @@ function draw() {
   // Multiply values by amplitude parameter
   vals = vals.map(v => v * amp);
 
-  // Attenuate values using ampOffset parameter
+  // Shift values using ampOffset parameter
   vals = vals.map(v => v + (ampOffset * 127));
 
   // Limit values to 0–127
@@ -118,10 +120,10 @@ function draw() {
   // Draw manipulated data
 
   strokeWeight(1)
-
+  let y = 2 * height / 3;
   // Draw upper & lower bounds
-  line(0, 2 * height / 3, width, 2 * height / 3);
-  line(0, 2 * height / 3 - 127, width, 2 * height / 3 - 127);
+  line(0, y, width, y);
+  line(0, y - 127, width, y - 127);
 
   noFill();
   beginShape();
