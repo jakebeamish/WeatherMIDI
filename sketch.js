@@ -16,13 +16,13 @@ var ampMin = 0.0;
 var ampMax = 2.0;
 var ampStep = 0.001;
 
-var steps = 168;
+var steps = 64;
 var stepsMin = 1;
 var stepsMax = 168;
 
-var stepsOffset = 0;
+var stepsOffset = 168/2 - 64/2;
 var stepsOffsetMin = 0;
-var stepsOffsetMax = 168;
+var stepsOffsetMax = 167;
 
 
 // Define clip function
@@ -59,6 +59,10 @@ function setup() {
 }
 
 function draw() {
+  //
+  // if (steps + stepsOffset >= temps.length) {
+  //   stepsOffset = temps.length - steps - 1;
+  // }
 
   fill(0);
   clear();
@@ -111,8 +115,13 @@ function draw() {
   // Limit values to 0–127
   vals = vals.map(clamp(0, 127))
 
+
+  line(stepsOffset * width / vals.length, height / 3 - temps[stepsOffset], 0, 2 * height / 3 - vals[stepsOffset])
+  //
+  line(((steps + stepsOffset) / temps.length) * width, height / 3 - temps[steps + stepsOffset], width, (2 * height / 3) - vals[stepsOffset + steps - 1])
+
   // Choose a portion of the array of values
-  vals = vals.slice(stepsOffset, stepsOffset + steps - 1)
+  vals = vals.slice(stepsOffset, stepsOffset + steps)
 
 
 
@@ -126,14 +135,22 @@ function draw() {
   line(0, y - 127, width, y - 127);
 
   noFill();
+
+
+
   beginShape();
-  for (let j = 0; j <= vals.length; j++) {
-    let x = j * (width / vals.length);
+  for (let j = 0; j < steps; j++) {
+    let x = width * (j / (steps - 1));
+    // console.log(j/vals.length * width)
+    // console.log(j, vals[j], j / (steps - 1))
     strokeWeight(4)
     point(x, 2 * height / 3 - vals[j]);
     strokeWeight(1)
     vertex(x, 2 * height / 3 - vals[j]);
+    line(x, 2 * height / 3 - vals[j], (j + stepsOffset) * (width / temps.length), height / 3 - temps[stepsOffset + j])
   }
+  // vertex( width - ((steps + stepsOffset - temps.length)/steps + 1) * (width), 2 * height/3);
+  // vertex(0, 2 * height/3);
   endShape();
-
+  strokeWeight(1);
 }
